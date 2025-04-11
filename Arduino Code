@@ -1,0 +1,23 @@
+#define SIGNAL_FROM_ESP 2
+#define RELAY_PIN 8        
+
+void setup() {
+  pinMode(SIGNAL_FROM_ESP, INPUT);
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW); // Start fan OFF
+  Serial.begin(9600);
+}
+
+void loop() {
+  int signal = digitalRead(SIGNAL_FROM_ESP);
+  
+  if (signal == HIGH) {
+    digitalWrite(RELAY_PIN, HIGH); // Turn fan ON
+    Serial.println("ESP32 says: FAN ON");
+  } else {
+    digitalWrite(RELAY_PIN, LOW);  // Turn fan OFF
+    Serial.println("ESP32 says: FAN OFF");
+  }
+
+  delay(500); // Small delay to debounce
+}
