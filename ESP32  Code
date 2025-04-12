@@ -9,16 +9,16 @@
 #define BLYNK_AUTH_TOKEN "4BlpecB5fsmFccwJNGk52yNnUBEhuuYv"
 #include <BlynkSimpleEsp32.h>
 #define DHTPIN 4 // Temperature Sensor
-#define BUZZER_PIN 12 // Buzzer
+//#define BUZZER_PIN 12 // Buzzer
 #define TEMP_THRESHOLD 35
 #define HUM_THRESHOLD 70
-#define CO2_THRESHOLD 200
+#define CO2_THRESHOLD 250
 #define CO2_PIN 34 // MQ135 Gas sensor
 #define SERVO_PIN 13 // servo motor
 #define TRIGGER_PIN 14 // Ultrasonic
 #define ECHO_PIN 15 // ultrasonic
-#define WIFI_NETWORK "Jubayer"
-#define WIFI_PASSWORD "25305856"
+#define WIFI_NETWORK "Ruby"
+#define WIFI_PASSWORD "87654321"
 #define WIFI_TIMEOUT_MS 20000
 //#define RELAY_PIN 26 
 #define ARDUINO_SIGNAL_PIN 25  // ESP32 pin to send signal to Arduino
@@ -63,7 +63,7 @@ void setup() {
   dht.setup(DHTPIN, DHTesp::DHT22);
   Serial.println("DHT22 Sensor Initialized...");
 
-  pinMode(BUZZER_PIN, OUTPUT);
+ // pinMode(BUZZER_PIN, OUTPUT);
   pinMode(CO2_PIN, INPUT);
   pinMode(TRIGGER_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
@@ -76,16 +76,19 @@ void setup() {
 
   myServo.attach(SERVO_PIN);
   myServo.write(0);
-  connectToWiFi();
+  
 
   lcd.init();           // Initialize the LCD
   lcd.backlight();      // Turn on the backlight
-  lcd.setCursor(0, 0);
-  lcd.print("Smart Crop Storage");
-  delay(1000);
+  lcd.setCursor(3, 0);
+  lcd.print("Smart Crop");
+  lcd.setCursor(5, 1);
+  lcd.print("Storage");
+  delay(2000);
   lcd.clear();
   
   Blynk.begin(BLYNK_AUTH_TOKEN, WIFI_NETWORK, WIFI_PASSWORD);
+  connectToWiFi();
 }
 
 void loop() {
@@ -130,13 +133,13 @@ void loop() {
   Blynk.run();
   // Threshold check
   if (temperature > TEMP_THRESHOLD || humidity > HUM_THRESHOLD || co2ppm>CO2_THRESHOLD || distance < 3) {
-    activateBuzzer();
+    //activateBuzzer();
     //digitalWrite(RELAY_PIN, HIGH); // Fan ON
       digitalWrite(ARDUINO_SIGNAL_PIN, LOW);    // Signal Arduino to turn on fan
 
     
   } else {
-    deactivateBuzzer();
+   // deactivateBuzzer();
     //digitalWrite(RELAY_PIN, LOW);   // Fan OFF
       digitalWrite(ARDUINO_SIGNAL_PIN, HIGH);     // Signal Arduino to turn off fan
 
@@ -146,13 +149,13 @@ void loop() {
   delay(3000);
 }
 
-void activateBuzzer() {
+/*void activateBuzzer() {
   digitalWrite(BUZZER_PIN, HIGH);
 }
 
 void deactivateBuzzer() {
   digitalWrite(BUZZER_PIN, LOW);
-}
+}*/
 
 void servo() {
   for (pos = 0; pos <= 180; pos += 1) {
